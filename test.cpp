@@ -151,6 +151,13 @@ main() {
         deq.push_back(&deq, MyClass{3, "Tom"});
 	printf("after push_back\n\n");
 
+	for(int i=0; i < deq.array_size; i++){
+		cout << i << ": " << endl;
+		MyClass_print(&deq.array[i]);
+	}
+	printf("\n\n\n\n");
+
+
 	printf("before push front\n");
         deq.push_front(&deq, MyClass{0, "Mike"});
 	printf("middle push front\n");
@@ -162,6 +169,15 @@ main() {
 	printf("middle print\n");
         MyClass_print(&deq.back(&deq));
 	printf("end print\n\n");
+
+
+	for(int i = 0; i < deq.array_size; i++){
+		cout << i << ": " << endl;
+		MyClass_print(&deq.array[i]);
+	}
+
+	printf("\n\n\n\n");
+
 
 	printf("front:\n");
         assert(deq.front(&deq).id == -1);
