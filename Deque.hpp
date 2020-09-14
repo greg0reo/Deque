@@ -41,14 +41,14 @@ using namespace std;
 					\
 					\
 					\
-		bool (*empty)(Deque_##t *);					\
-		void (*push_back)(Deque_##t *, t);				\
-		void (*push_front)(Deque_##t *, t);				\
-		t &(*front)(Deque_##t *);					\
-		t &(*back)(Deque_##t *);					\
-		void (*pop_front)(Deque_##t *);					\
-		void (*pop_back)(Deque_##t *);					\
-		size_t (*size)(Deque_##t *);					\
+		bool (*empty)(Deque_##t *);		/*done*/			\
+		void (*push_back)(Deque_##t *, t);	/*done*/			\
+		void (*push_front)(Deque_##t *, t);	/*done*/			\
+		t &(*front)(Deque_##t *);		/*done*/			\
+		t &(*back)(Deque_##t *);		/*done*/			\
+		void (*pop_front)(Deque_##t *);		/*done*/			\
+		void (*pop_back)(Deque_##t *);		/*done*/			\
+		size_t (*size)(Deque_##t *);		/*done*/			\
 		Deque_##t##_Iterator (*begin)(Deque_##t *);			\
 		Deque_##t##_Iterator (*end)(Deque_##t *);			\
 		bool (*equal)(Deque_##t, Deque_##t);				\
@@ -214,6 +214,9 @@ using namespace std;
 	Deque_##t##_Iterator Deque_##t##_end(Deque_##t *deq){	\
 	}							\
 	t &Deque_##t##_at(Deque_##t *deq, int i){			\
+		return deq->array[(deq->head + i) % deq->array_size];		\
+							\
+							\
 	}							\
 							\
 	void Deque_##t##_clear(Deque_##t *deq){			\

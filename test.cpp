@@ -196,11 +196,16 @@ main() {
 
 	printf("size again\n");
         assert(deq.size(&deq) == 3);
+	printf("after size\nbefore iterator\n");
 
         for (Deque_MyClass_Iterator it = deq.begin(&deq);
          !Deque_MyClass_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
             MyClass_print(&it.deref(&it));
         }
+
+	printf("post iterator\n");
+	printf("before multiple iterators\n");
+	printf("\n");
 
         // Multiple iterators?
         for (Deque_MyClass_Iterator it1 = deq.begin(&deq);
