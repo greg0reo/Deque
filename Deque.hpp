@@ -100,22 +100,22 @@ using namespace std;
 	    }							\
 	    if(deq->tail - deq->head >= deq->array_size){	\
 	        /*resizing the array goes here */		\
-		cout << "------BACK-RESIZING------\n" << endl;		\
-	        deq->array_size *= 2;				\
+/*		cout << "------BACK-RESIZING------\n" << endl;		\
+*/	        deq->array_size *= 2;				\
 	        t * temp_array = (t *)malloc(deq->array_size * sizeof(t));			\
 	        for(int i = 0; i < deq->array_size/2; i++){	\
-		    cout << deq->head << endl;		\
-	            temp_array[i] = deq->array[(deq->head + i) % (deq->array_size/2)];		\
+/*		    cout << "here?" << endl;		\
+*/	            temp_array[i] = deq->array[(deq->head + i) % (deq->array_size/2)];		\
 	        }						\
 	        deq->head = 0;					\
 	        deq->tail = (deq->array_size/2);		\
 	        deq->array = temp_array;			\
 								\
-		cout << "head: " << deq->head << "tail: " << deq->tail << "size: " << deq->array_size << "back\n"<<endl;							\
-								\
+/*		cout << "head: " << deq->head << "tail: " << deq->tail << "size: " << deq->array_size << "back\n"<<endl;							\
+*/								\
 	    }							\
-		cout << "back pushing to this tail: " << deq->tail  << "\n" << endl;	\
-	    deq->array[deq->tail % deq->array_size] = myClass;	\
+/*		cout << "back pushing to this tail: " << deq->tail  << "\n" << endl;	\
+*/	    deq->array[deq->tail % deq->array_size] = myClass;	\
 	    deq->tail++;					\
 								\
 	}							\
@@ -128,8 +128,8 @@ using namespace std;
 	    }							\
 	    if((deq->tail - deq->head) >= deq->array_size){	\
 	        /* resizing of the array goes here */		\
-		cout << "------FRONT-RESIZING------\n" << endl;		\
-	        deq->array_size *= 2;				\
+/*		cout << "------FRONT-RESIZING------\n" << endl;		\
+*/	        deq->array_size *= 2;				\
 	        t * temp_array = (t *)malloc(deq->array_size * sizeof(t));		\
 	        for(int i = 0; i < deq->array_size/2; i++){		\
 	            temp_array[i] = deq->array[(deq->head + i) % (deq->array_size/2)];		\
@@ -137,15 +137,15 @@ using namespace std;
 	        deq->head = 0;					\
 	        deq->tail = (deq->array_size/2);		\
 	        deq->array = temp_array;			\
-		cout << "head: " << deq->head << "tail: " << deq->tail << "size: " << deq->array_size << "front\n"<<endl;				\
-	    }							\
+/*		cout << "head: " << deq->head << "tail: " << deq->tail << "size: " << deq->array_size << "front\n"<<endl;				\
+*/	    }							\
 	    deq->array[(deq->head + deq->array_size -1) % deq->array_size] = myClass;		\
 	    deq->head = (deq->head + deq->array_size -1) % deq->array_size;		\
-		cout << "front pushing to this head: " << deq->head << "\n" << endl;	\
-	    if(deq->head >= deq->tail){				\
+/*		cout << "front pushing to this head: " << deq->head << "\n" << endl;	\
+*/	    if(deq->head >= deq->tail){				\
 	        deq->tail += deq->array_size;			\
-		cout << "I AM TRIGGERED" << endl;								\
-	    }							\
+/*		cout << "I AM TRIGGERED" << endl;								\
+*/	    }							\
 	}							\
 								\
 								\
@@ -185,6 +185,7 @@ using namespace std;
 							\
 	t &Deque_##t##_front(Deque_##t *deq){		\
 		cout << "front, head is: " << deq->head << endl;	\
+		cout << "front, array size is: " <<deq->array_size << endl;							\
 		return deq->array[deq->head];			\
 	}							\
 							\
@@ -194,7 +195,7 @@ using namespace std;
 	}							\
 	void Deque_##t##_pop_front(Deque_##t *deq){		\
 		if(deq->head != deq->tail){							\
-			deq->head++;				\
+			deq->head = (deq->head+1)%deq->array_size;				\
 			if(deq->tail > deq->array_size && deq->tail > deq->head + deq->array_size){							\
 				deq->tail -= deq->array_size;				\
 			}				\
@@ -204,17 +205,18 @@ using namespace std;
 							\
 	void Deque_##t##_pop_back(Deque_##t *deq){		\
 		if(deq->head != deq->tail){					\
-			deq->tail--;				\
-							\
-							\
-							\
+			if(deq->tail != 0){					\
+				deq->tail--;					\
+			}else{				\
+				deq->tail = deq->array_size-1;				\
+			}				\
 		}					\
 							\
 	}							\
 							\
 	size_t Deque_##t##_size(Deque_##t *deq){		\
-		std::cout << "this is size\n" << std::endl;	\
-		return deq->tail - deq->head;				\
+/*		std::cout << "this is size\n" << std::endl;	\
+*/		return deq->tail - deq->head;				\
 /*		return deq->amount;			*/	\
 	}							\
 							\
@@ -250,24 +252,24 @@ using namespace std;
 	void Deque_##t##_Iterator_inc(Deque_##t##_Iterator *itr){\
 		int tempIndex = (itr->index + 1)% itr->deq->array_size;						\
 								\
-		printf("inc\n");						\
-		itr->index = tempIndex;								\
+/*		printf("inc\n");						\
+*/		itr->index = tempIndex;								\
 	}							\
 								\
 	void Deque_##t##_Iterator_dec(Deque_##t##_Iterator *itr){\
-		printf("dec\n");						\
-		itr->index--;						\
+/*		printf("dec\n");						\
+*/		itr->index--;						\
 	}							\
 								\
 	t& Deque_##t##_Iterator_deref(Deque_##t##_Iterator *itr){	\
-		printf("deref\n");						\
-		return (itr->deq->at(itr->deq, itr->index));								\
+/*		printf("deref\n");						\
+*/		return (itr->deq->at(itr->deq, itr->index));								\
 	}							\
 								\
 	bool Deque_##t##_Iterator_equal(Deque_##t##_Iterator itr1, 		\
 					Deque_##t##_Iterator itr2){		\
-		printf("equal\n");						\
-		if(itr1.index == itr2.index){					\
+/*		printf("equal\n");						\
+*/		if(itr1.index == itr2.index){					\
 			if(itr1.deq == itr2.deq){				\
 				return true;				\
 			}						\
@@ -278,8 +280,8 @@ using namespace std;
 								\
 								\
 	Deque_##t##_Iterator Deque_##t##_begin(Deque_##t *deq){						\
-		printf("begin\n");						\
-		Deque_##t##_Iterator itr;					\
+/*		printf("begin\n");						\
+*/		Deque_##t##_Iterator itr;					\
 		itr.index = 0;				\
 		itr.deq = deq;				\
 		itr.inc = &Deque_##t##_Iterator_inc;				\
@@ -291,8 +293,8 @@ using namespace std;
 						\
 						\
 	Deque_##t##_Iterator Deque_##t##_end(Deque_##t *deq){						\
-		printf("end\n");					\
-		Deque_##t##_Iterator itr;					\
+/*		printf("end\n");					\
+*/		Deque_##t##_Iterator itr;					\
 		itr.index = (deq->tail) - (deq->head);					\
 		itr.deq = deq;						\
 		itr.inc = &Deque_##t##_Iterator_inc;				\

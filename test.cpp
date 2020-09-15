@@ -254,6 +254,7 @@ main() {
 	printf("\n");
 
         // Change via front().
+	cout << deq.front(&deq).id << endl;
         assert(deq.front(&deq).id == 100);
 	printf("1\n");
         deq.front(&deq).id = 0;
@@ -291,6 +292,7 @@ main() {
             Deque_MyClass deq1, deq2;
             Deque_MyClass_ctor(&deq1, MyClass_less_by_id);
             Deque_MyClass_ctor(&deq2, MyClass_less_by_id);
+	    printf("is it here?");
 
             deq1.push_back(&deq1, MyClass{1, "Joe"});
             deq1.push_back(&deq1, MyClass{2, "Jane"});
@@ -319,6 +321,7 @@ main() {
 
         assert(deq.size(&deq) == 0);
         assert(deq.empty(&deq));
+	printf("should print ---------\n");
 
         // Should print "---- Deque_int, 10".
         printf("---- %s, %d\n", deq.type_name, int(sizeof(deq.type_name)));
@@ -342,11 +345,13 @@ main() {
         assert(deq.back(&deq) == 2);
 
         assert(deq.size(&deq) == 3);
+	printf("before a for loop\n");
 
         for (Deque_int_Iterator it = deq.begin(&deq);
          !Deque_int_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
             printf("%d\n", it.deref(&it));
         }
+	printf("after fo loop\nbefore test decrement\n");
 
         // Test decrement.
         {
@@ -468,6 +473,9 @@ main() {
        printf("Sum of all integers between %d and %d calculated using a deque is %lu.\n", lo, hi, sum);
        deq.dtor(&deq);
     }
+
+
+	printf("right before sorting test\n\n\n");
 
     // Test sort.
     // You must be able to work with the correct less-than function.
