@@ -200,12 +200,15 @@ main() {
 
         for (Deque_MyClass_Iterator it = deq.begin(&deq);
          !Deque_MyClass_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
+  		printf("index= %d\n", it.index);
+//		it.index++;
+//		it.dec(&it);
             MyClass_print(&it.deref(&it));
+		printf("we get it2222\n");
         }
 
 	printf("post iterator\n");
 	printf("before multiple iterators\n");
-	printf("\n");
 
         // Multiple iterators?
         for (Deque_MyClass_Iterator it1 = deq.begin(&deq);
@@ -220,6 +223,8 @@ main() {
                 }
             }
         }
+	printf("after multiterators\nbefore end decrement\n");
+
 
         // Test decrement of end.
         {
@@ -228,11 +233,16 @@ main() {
             assert(it.deref(&it).id == 2);
         }
 
+	printf("after end decrement\nbefore using at\n");
+
+
         // printf("Using at.\n");
 
         for (size_t i = 0; i < 3; i++) {
             MyClass_print(&deq.at(&deq, i));
         }
+
+	printf("after using at\nbefore testing for reference return\n");
 
         // Test that front(), back(), at(), and deref() are returning a reference.
         // Change via at().
@@ -240,11 +250,18 @@ main() {
         deq.at(&deq, 0).id = 100;
         assert(deq.at(&deq, 0).id == 100);
 
+	printf("after testing reference return\n");
+	printf("\n");
 
         // Change via front().
         assert(deq.front(&deq).id == 100);
+	printf("1\n");
         deq.front(&deq).id = 0;
+	printf("2\n");
         assert(deq.front(&deq).id == 0);
+	printf("3\n");
+	printf("middle of testing changing via front\n");
+
         assert(deq.at(&deq, 0).id == 0); // Verify with at() also.
         {
             auto it = deq.end(&deq);
@@ -258,8 +275,11 @@ main() {
             assert(deq.back(&deq).id == 2);
             assert(it.deref(&it).id == 2); // Verify with iterator also.
         }
+	printf("right before deq.clear\n");
 
         deq.clear(&deq);
+	printf("after deq.clear\n");
+	printf("\n");
 
         deq.dtor(&deq);
 

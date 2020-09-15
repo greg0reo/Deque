@@ -195,6 +195,9 @@ using namespace std;
 	void Deque_##t##_pop_front(Deque_##t *deq){		\
 		if(deq->head != deq->tail){							\
 			deq->head++;				\
+			if(deq->tail > deq->array_size && deq->tail > deq->head + deq->array_size){							\
+				deq->tail -= deq->array_size;				\
+			}				\
 		}					\
 							\
 	}							\
@@ -202,8 +205,10 @@ using namespace std;
 	void Deque_##t##_pop_back(Deque_##t *deq){		\
 		if(deq->head != deq->tail){					\
 			deq->tail--;				\
-		}					\
 							\
+							\
+							\
+		}					\
 							\
 	}							\
 							\
@@ -213,11 +218,10 @@ using namespace std;
 /*		return deq->amount;			*/	\
 	}							\
 							\
-	Deque_##t##_Iterator Deque_##t##_begin(Deque_##t *deq){	\
+/*	Deque_##t##_Iterator Deque_##t##_begin(Deque_##t *deq){	\
 	}							\
+*/							\
 							\
-	Deque_##t##_Iterator Deque_##t##_end(Deque_##t *deq){	\
-	}							\
 	t &Deque_##t##_at(Deque_##t *deq, int i){			\
 		return deq->array[(deq->head + i) % deq->array_size];		\
 							\
@@ -244,24 +248,37 @@ using namespace std;
 								\
 								\
 	void Deque_##t##_Iterator_inc(Deque_##t##_Iterator *itr){\
-		itr->index++;								\
+		int tempIndex = (itr->index + 1)% itr->deq->array_size;						\
+								\
+		printf("inc\n");						\
+		itr->index = tempIndex;								\
 	}							\
 								\
 	void Deque_##t##_Iterator_dec(Deque_##t##_Iterator *itr){\
+		printf("dec\n");						\
 		itr->index--;						\
 	}							\
 								\
-	t Deque_##t##_Iterator_deref(Deque_##t##_Iterator *itr){	\
+	t& Deque_##t##_Iterator_deref(Deque_##t##_Iterator *itr){	\
+		printf("deref\n");						\
 		return (itr->deq->at(itr->deq, itr->index));								\
 	}							\
 								\
-	bool Deque_##t##_Iterator_equal(Deque_##t##_Iterator itr1, Deque_##t##_Iterator itr2){\
-								\
+	bool Deque_##t##_Iterator_equal(Deque_##t##_Iterator itr1, 		\
+					Deque_##t##_Iterator itr2){		\
+		printf("equal\n");						\
+		if(itr1.index == itr2.index){					\
+			if(itr1.deq == itr2.deq){				\
+				return true;				\
+			}						\
+		}						\
+		return false;						\
 	}							\
 								\
-								\	
-\
-	Deque_##t##_Iterator begin(Deque_##t *deq){						\
+								\
+								\
+	Deque_##t##_Iterator Deque_##t##_begin(Deque_##t *deq){						\
+		printf("begin\n");						\
 		Deque_##t##_Iterator itr;					\
 		itr.index = 0;				\
 		itr.deq = deq;				\
@@ -269,7 +286,29 @@ using namespace std;
 		itr.dec = &Deque_##t##_Iterator_dec;				\
 		itr.deref = &Deque_##t##_Iterator_deref;				\
 		itr.equal = &Deque_##t##_Iterator_equal;				\
+		return itr;						\
 	}					\
+						\
+						\
+	Deque_##t##_Iterator Deque_##t##_end(Deque_##t *deq){						\
+		printf("end\n");					\
+		Deque_##t##_Iterator itr;					\
+		itr.index = (deq->tail) - (deq->head);					\
+		itr.deq = deq;						\
+		itr.inc = &Deque_##t##_Iterator_inc;				\
+		itr.dec = &Deque_##t##_Iterator_dec;				\
+		itr.deref = &Deque_##t##_Iterator_deref;				\
+		itr.equal = &Deque_##t##_Iterator_equal;				\
+		return itr;						\
+						\
+						\
+						\
+						\
+						\
+				\
+	}						\
+						\
+						\
 						\
 	void Deque_##t##_ctor(Deque_##t *greg, bool (*comp)(const t &addr1, const t &addr2)){	\
 								\
