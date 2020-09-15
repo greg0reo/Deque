@@ -76,6 +76,9 @@ using namespace std;
 		void (*dec)(Deque_##t##_Iterator *);	\
 		bool (*equal)(Deque_##t##_Iterator, Deque_##t##_Iterator);	\
 		t &(*deref)(Deque_##t##_Iterator *);	\
+							\
+		int index;				\
+		Deque_##t *deq;				\
 	};	\
 		\
 		\
@@ -83,6 +86,17 @@ using namespace std;
 		\
 		\
 		\
+						\
+	Deque_##t##_Iterator begin(Deque_##t *deq){						\
+		Deque_##t##_Iterator itr;					\
+		itr.index = 0;				\
+		itr.deq = deq;				\
+		itr.inc = &Deque_##t##_Iterator_inc;				\
+		itr.dec = &Deque_##t##_Iterator_dec;				\
+		itr.deref = &Deque_##t##_Iterator_deref;				\
+		itr.equal = &Deque_##t##_Iterator_equal;				\
+	}					\
+						\
 						\
 							\
 	bool Deque_##t##_empty(Deque_##t *deq){		\
@@ -235,17 +249,19 @@ using namespace std;
 								\
 								\
 								\
+/* ---------------------------ITERATOR ITERATOR ITERATOR-------------------------*/								\
+								\
 								\
 	void Deque_##t##_Iterator_inc(Deque_##t##_Iterator *itr){\
-								\
+		itr->index++;								\
 	}							\
 								\
 	void Deque_##t##_Iterator_dec(Deque_##t##_Iterator *itr){\
-								\
+		itr->index--;						\
 	}							\
 								\
 	t Deque_##t##_Iterator_deref(Deque_##t##_Iterator *itr){	\
-								\
+		return (itr->deq->at(itr->deq, itr->index));								\
 	}							\
 								\
 	bool Deque_##t##_Iterator_equal(Deque_##t##_Iterator itr1, Deque_##t##_Iterator itr2){\
