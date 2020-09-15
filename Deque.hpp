@@ -77,16 +77,16 @@ using namespace std;
 		\
 		\
 		\
-						\
-	Deque_##t##_Iterator begin(Deque_##t *deq){						\
-		Deque_##t##_Iterator itr;					\
-		itr.index = 0;				\
-		itr.deq = deq;				\
-		itr.inc = &Deque_##t##_Iterator_inc;				\
-		itr.dec = &Deque_##t##_Iterator_dec;				\
-		itr.deref = &Deque_##t##_Iterator_deref;				\
-		itr.equal = &Deque_##t##_Iterator_equal;				\
-	}					\
+	struct Deque_##t##_Iterator{			\
+		void (*inc)(Deque_##t##_Iterator *);	\
+		void (*dec)(Deque_##t##_Iterator *);	\
+		bool (*equal)(Deque_##t##_Iterator, Deque_##t##_Iterator);	\
+		t &(*deref)(Deque_##t##_Iterator *);	\
+							\
+		int index;				\
+		Deque_##t *deq;				\
+	};	\
+		\
 						\
 						\
 							\
@@ -260,16 +260,17 @@ using namespace std;
 	}							\
 								\
 								\	
-	struct Deque_##t##_Iterator{			\
-		void (*inc)(Deque_##t##_Iterator *);	\
-		void (*dec)(Deque_##t##_Iterator *);	\
-		bool (*equal)(Deque_##t##_Iterator, Deque_##t##_Iterator);	\
-		t &(*deref)(Deque_##t##_Iterator *);	\
-							\
-		int index;				\
-		Deque_##t *deq;				\
-	};	\
-		\
+\
+	Deque_##t##_Iterator begin(Deque_##t *deq){						\
+		Deque_##t##_Iterator itr;					\
+		itr.index = 0;				\
+		itr.deq = deq;				\
+		itr.inc = &Deque_##t##_Iterator_inc;				\
+		itr.dec = &Deque_##t##_Iterator_dec;				\
+		itr.deref = &Deque_##t##_Iterator_deref;				\
+		itr.equal = &Deque_##t##_Iterator_equal;				\
+	}					\
+						\
 	void Deque_##t##_ctor(Deque_##t *greg, bool (*comp)(const t &addr1, const t &addr2)){	\
 								\
 		greg->array_size = 0;				\
