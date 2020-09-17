@@ -37,8 +37,12 @@ using namespace std;
 		int array_fill;		\
 		int index;		\
 					\
+					\
+					\
 		/*char type_name[holder];			*/	\
 					\
+		bool (*comp)(const t &, const t &);			\
+		int (*comparison)(const void *, const void *, void *);			\
 					\
 					\
 		bool (*empty)(Deque_##t *);		/*done*/			\
@@ -91,6 +95,11 @@ using namespace std;
 						\
 							\
 	bool Deque_##t##_empty(Deque_##t *deq){		\
+		if(deq->size(deq) == 0){							\
+			return true;						\
+		}						\
+		return false;						\
+								\
 	}							\
 								\
 	void Deque_##t##_push_back(Deque_##t *deq, t myClass){		\
@@ -184,14 +193,14 @@ using namespace std;
 */							\
 							\
 	t &Deque_##t##_front(Deque_##t *deq){		\
-		cout << "front, head is: " << deq->head << endl;	\
+/*		cout << "front, head is: " << deq->head << endl;	\
 		cout << "front, array size is: " <<deq->array_size << endl;							\
-		return deq->array[deq->head];			\
+*/		return deq->array[deq->head];			\
 	}							\
 							\
 	t &Deque_##t##_back(Deque_##t *deq){			\
-		cout << "back, tail is: " << deq-> tail << endl;	\
-		return deq->array[(deq->tail - 1) % deq->array_size];			\
+/*		cout << "back, tail is: " << deq-> tail << endl;	\
+*/		return deq->array[(deq->tail - 1) % deq->array_size];			\
 	}							\
 	void Deque_##t##_pop_front(Deque_##t *deq){		\
 		if(deq->head != deq->tail){							\
@@ -231,13 +240,64 @@ using namespace std;
 	}							\
 							\
 	void Deque_##t##_clear(Deque_##t *deq){			\
+		deq->head = 0;					\
+		deq->tail = 0;					\
 	}							\
 							\
 	bool Deque_##t##_equal(Deque_##t deq1, Deque_##t deq2){	\
-							\
+		if(deq1.size(&deq1) != deq2.size(&deq2)){				\
+			cout << "there is a problem with the size\n" << endl; \
+			return false;			\
+		}				\
+		for(int i = 0; i < deq2.size(&deq2); i++){		\
+			if(deq1.comp(deq1.at(&deq1, i), deq2.at(&deq2, i))){				cout << "there is a problem with comp\n" << endl;		\
+				cout << "deq1\n" << endl;		\
+				return false;		\
+			}			\
+			if(deq2.comp(deq2.at(&deq2, i), deq1.at(&deq1, i))){	\
+				cout << "deq2\n" << endl;		\
+				return false;		\
+			}			\
+		}				\
+		return true;				\
 	}							\
 							\
+							\
+							\
+	int t##_comparison(const void *one, const void *two, void *deq){						\
+		bool (*comp)(const t &, const t &) = (bool (*)(const t &, const t &))deq;				\
+		const t *one2 = (const t*)one;				\
+		const t *two2 = (const t*)two;					\
+		if(comp(*one2, *two2)){					\
+			return -1;				\
+		}					\
+		if(comp(*two2, *one2)){					\
+			return 1;				\
+		}					\
+/*		t one2 = *(t *)one;					\
+		t two2 = *(t *)two;					\
+		Deque_##t deq2 = *(Deque_##t *)deq;					\
+		if(deq2.comp(one2, two2)){					\
+			return -1;				\
+		}					\
+		if(deq2.comp(two2, one2)){					\
+			return 1;				\
+		}					\
+*/		return 0;					\
+	}						\
+							\
 	void Deque_##t##_sort(Deque_##t *deq, Deque_##t##_Iterator itr1, Deque_##t##_Iterator itr2){\
+		int num_elements = (deq->array_size + itr1.index - itr2.index) % deq->array_size;					\
+		t *tempArray = (t*)malloc(num_elements * sizeof(Deque_##t));		\
+		for(int i = 0; i < num_elements; i++){					\
+			tempArray[i] = deq->at(deq, (itr1.index +i) % deq->array_size);			\
+		}					\
+/*		cout << "before qsort_r\n" <<endl;					\
+*/		qsort_r(tempArray, num_elements, sizeof(t), deq->comparison, (void *)deq->comp);				\
+/*		cout << "after qsort_r\n" << endl;					\
+*/		for(int i = 0; i < num_elements; i++){					\
+			deq->at(deq, (itr1.index + i) % deq->array_size) = tempArray[i];				\
+		}					\
 							\
 	}							\
 							\
@@ -345,6 +405,9 @@ using namespace std;
 		greg->end = &Deque_##t##_end;			\
 		greg->equal = &Deque_##t##_equal;		\
 								\
+		greg->comp = comp;						\
+		greg->comparison = &t##_comparison;						\
+								\
 		greg->sort = &Deque_##t##_sort;			\
 		greg->at = &Deque_##t##_at;			\
 		greg->clear = &Deque_##t##_clear;		\
@@ -353,4 +416,4 @@ using namespace std;
 								\
 								\
 
-#endif	
+#endif

@@ -351,7 +351,7 @@ main() {
          !Deque_int_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
             printf("%d\n", it.deref(&it));
         }
-	printf("after fo loop\nbefore test decrement\n");
+	printf("after for loop\nbefore test decrement\n");
 
         // Test decrement.
         {
@@ -489,10 +489,16 @@ main() {
             deq.push_back(&deq, rand(-1000000, 1000000)(e));
         }
 
+	printf("immediately before sort\n");
+
         deq.sort(&deq, deq.begin(&deq), deq.end(&deq));
+
+	printf("after sort, before dtor\n");
 
         deq.dtor(&deq);
     }
+	printf("oh boy time to start testing again\n");
+	printf("\n");
 
 
     // Sorting Test 2
@@ -528,7 +534,11 @@ main() {
            deq2.push_back(&deq2,i);
        }
 
+	printf("no way we get here\n");
+
       assert(Deque_int_equal(deq1, deq2)); 
+
+	printf("do we come out on the other end?\n");
 
       deq1.dtor(&deq1);
       deq2.dtor(&deq2);
