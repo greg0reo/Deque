@@ -43,7 +43,7 @@ using namespace std;
 					\
 		bool (*comp)(const t &, const t &);			\
 		int (*comparison)(const void *, const void *, void *);			\
-					\
+		int (*compHelp)(const void*, const void *, void *);			\
 					\
 		bool (*empty)(Deque_##t *);		/*done*/			\
 		void (*push_back)(Deque_##t *, t);	/*done*/			\
@@ -250,20 +250,32 @@ using namespace std;
 			return false;			\
 		}				\
 		for(int i = 0; i < deq2.size(&deq2); i++){		\
-			if(deq1.comp(deq1.at(&deq1, i), deq2.at(&deq2, i))){				cout << "there is a problem with comp\n" << endl;		\
+			if(deq1.comp(deq1.at(&deq1, i), deq2.at(&deq2, i)) || deq2.comp(deq2.at(&deq2, i), deq1.at(&deq1, i))){				\
+							\
+							\
+/*			if(deq1.comp(deq1.at(&deq1, i), deq2.at(&deq2, i))){	\
+/*			cout << "there is a problem with comp\n" << endl;		\
 				cout << "deq1\n" << endl;		\
 				return false;		\
 			}			\
 			if(deq2.comp(deq2.at(&deq2, i), deq1.at(&deq1, i))){	\
-				cout << "deq2\n" << endl;		\
-				return false;		\
+/*				cout << "deq2\n" << endl;		\
+*/				return false;		\
 			}			\
 		}				\
 		return true;				\
 	}							\
-							\
-							\
-							\
+/*							\
+	int Deque_##t##_compHelp(const void *one, const void* two){						\
+		if(this.comp(*((t*) one), *((t*)two))){					\
+			return -1;				\
+		}					\
+		if(this.comp(*((t*)two), *((t*)one))){					\
+			return 1;				\
+		}					\
+		return 0;					\
+	}						\
+*/							\
 	int t##_comparison(const void *one, const void *two, void *deq){						\
 		bool (*comp)(const t &, const t &) = (bool (*)(const t &, const t &))deq;				\
 		const t *one2 = (const t*)one;				\
@@ -274,7 +286,14 @@ using namespace std;
 		if(comp(*two2, *one2)){					\
 			return 1;				\
 		}					\
-/*		t one2 = *(t *)one;					\
+		return 0;					\
+	}						\
+								\
+							\
+	int Deque_##t##_compHelp(const void *one, const void *two, void *deq){						\
+						\
+							\
+		t one2 = *(t *)one;					\
 		t two2 = *(t *)two;					\
 		Deque_##t deq2 = *(Deque_##t *)deq;					\
 		if(deq2.comp(one2, two2)){					\
@@ -283,8 +302,13 @@ using namespace std;
 		if(deq2.comp(two2, one2)){					\
 			return 1;				\
 		}					\
-*/		return 0;					\
-	}						\
+		return 0;					\
+	}							\
+							\
+							\
+							\
+							\
+							\
 							\
 	void Deque_##t##_sort(Deque_##t *deq, Deque_##t##_Iterator itr1, Deque_##t##_Iterator itr2){\
 		int num_elements = (deq->array_size + itr1.index - itr2.index) % deq->array_size;					\
@@ -292,16 +316,20 @@ using namespace std;
 		for(int i = 0; i < num_elements; i++){					\
 			tempArray[i] = deq->at(deq, (itr1.index +i) % deq->array_size);			\
 		}					\
-/*		cout << "before qsort_r\n" <<endl;					\
-*/		qsort_r(tempArray, num_elements, sizeof(t), deq->comparison, (void *)deq->comp);				\
-/*		cout << "after qsort_r\n" << endl;					\
-*/		for(int i = 0; i < num_elements; i++){					\
+		cout << "before qsort_r\n" <<endl;					\
+/*		qsort_r(tempArray, num_elements, sizeof(t), deq->compHelp, (void *)deq->comp);				\
+*/		cout << "after qsort_r\n" << endl;					\
+							\
+		qsort_r(tempArray, num_elements, sizeof(t), deq->compHelp, (void *)deq);					\
+							\
+		for(int i = 0; i < num_elements; i++){					\
 			deq->at(deq, (itr1.index + i) % deq->array_size) = tempArray[i];				\
 		}					\
-							\
+		free(tempArray);					\
 	}							\
 							\
 	void Deque_##t##_dtor(Deque_##t *deq){			\
+		free(deq->array);						\
 	}							\
 								\
 								\
@@ -374,6 +402,7 @@ using namespace std;
 						\
 	void Deque_##t##_ctor(Deque_##t *greg, bool (*comp)(const t &addr1, const t &addr2)){	\
 								\
+								\
 		greg->array_size = 0;				\
 		greg->head = 0;					\
 		greg->tail = 0;					\
@@ -382,7 +411,7 @@ using namespace std;
 		greg->array_fill = 0;				\
 		greg->index = 0;				\
 								\
-		greg->array = (t *)malloc(sizeof(t) * 10);	\
+		greg->array = (t *)malloc(sizeof(t));	\
 		if(!greg->array){				\
 			printf("Malloc didn't work\n");		\
 			exit(1);				\
@@ -406,7 +435,8 @@ using namespace std;
 		greg->equal = &Deque_##t##_equal;		\
 								\
 		greg->comp = comp;						\
-		greg->comparison = &t##_comparison;						\
+		greg->comparison = t##_comparison;						\
+		greg->compHelp = &Deque_##t##_compHelp; 						\
 								\
 		greg->sort = &Deque_##t##_sort;			\
 		greg->at = &Deque_##t##_at;			\
