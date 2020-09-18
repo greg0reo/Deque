@@ -448,7 +448,7 @@ main() {
            deq2.push_back(&deq2,i);
        }
 
-//      assert(Deque_int_equal(deq1, deq2)); 
+      assert(Deque_int_equal(deq1, deq2)); 
 
       deq1.dtor(&deq1);
       deq2.dtor(&deq2);
