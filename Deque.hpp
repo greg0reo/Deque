@@ -317,9 +317,15 @@ using namespace std;
 	void bubbleSort(t *array, int n, Deque_##t *deq){						\
 		int i, j;						\
 		t temp;					\
-		for(i = 0; i < n-1; i++){					\
-			for(j = 0; j < n-i-1; j++){				\
-				if(deq->comp(array[j], array[j+1])){			\
+/*		cout << "do we even get here\n" << endl; 					\
+*/		for(i = 0; i < n-1; i++){					\
+/*			cout << "first loop\n"  << endl;			\
+*/			for(j = 0; j < n-i-1; j++){				\
+/*				cout << "before if\n" << endl;			\
+*/				if(deq->comp(array[j+1], array[j])){			\
+							\
+/*					cout << "swapping " << j << " with " << j+1 << "\n" <<  endl;		\
+*/							\
 					swap(&array[j], &array[j+1]);		\
 							\
 							\
@@ -342,18 +348,20 @@ using namespace std;
 							\
 							\
 	void Deque_##t##_sort(Deque_##t *deq, Deque_##t##_Iterator itr1, Deque_##t##_Iterator itr2){\
-		int num_elements = (deq->array_size + itr1.index - itr2.index) % deq->array_size;					\
+		int num_elements = (deq->array_size + itr2.index - itr1.index) % deq->array_size;					\
 		t *tempArray = (t*)malloc(num_elements * sizeof(Deque_##t));		\
 		for(int i = 0; i < num_elements; i++){					\
 			tempArray[i] = deq->at(deq, (itr1.index +i) % deq->array_size);			\
 		}					\
 /*		cout << "before qsort_r\n" <<endl;					\
-/*		qsort_r(tempArray, num_elements, sizeof(t), deq->compHelp, (void *)deq->comp);				\
-*		cout << "after qsort_r\n" << endl;					\
-							\
+		qsort_r(tempArray, num_elements, sizeof(t), deq->compHelp, (void *)deq->comp);				\
+		cout << "after qsort_r\n" << endl;					\
+/*							\
 		qsort_r(tempArray, num_elements, sizeof(t), deq->compHelp, deq);					\
-*/							\
-		bubbleSort(tempArray, num_elements, deq);							\
+							\
+*/					\
+/*		cout << "num_elements: " << num_elements << endl;			\
+*/		bubbleSort(tempArray, num_elements, deq);							\
 					\
 		for(int i = 0; i < num_elements; i++){					\
 							\

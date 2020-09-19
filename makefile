@@ -8,7 +8,11 @@ new: new.o
 new.o: new.cpp
 	g++ -g -c new.cpp
 
+greg: greg.o
+	g++ $(CFLAGS) greg.o -o greg
 
+greg.o: greg.cpp
+	g++ -g -c greg.cpp
 
 
 temp: temp.o
