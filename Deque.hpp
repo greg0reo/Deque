@@ -39,9 +39,9 @@ using namespace std;
 					\
 					\
 					\
-		/*char type_name[holder];			*/	\
-									\
-		bool (*comp)(const t &, const t &);			\
+		/*char type_name[holder];			*/			\
+											\
+		bool (*comp)(const t &, const t &);					\
 		int (*comparison)(const void *, const void *, void *);			\
 		int (*compHelp)(const void*, const void *, void *);			\
 											\
@@ -259,8 +259,8 @@ using namespace std;
 				return false;		\
 			}			\
 */			if(deq2.comp(deq2.at(&deq2, i), deq1.at(&deq1, i))){		\
-				cout << i << endl;					\
-				return false;						\
+/*				cout << i << endl;					\
+*/				return false;						\
 			}								\
 		}									\
 		return true;								\
