@@ -527,5 +527,4 @@ main() {
    printf("%ld allocations totalling %ld bytes\n", alloc_call_count, total_bytes_allocated);
    int rv = fclose(devnull);
    assert(rv == 0);
-   printf("done?\n");
 }
