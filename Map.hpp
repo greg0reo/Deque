@@ -1,5 +1,5 @@
-#ifndef ZACH_HALPERN_MAP_HPP
-#define ZACH_HALPERN_MAP_HPP
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include <iostream>
 #include <vector>
@@ -192,10 +192,10 @@ namespace cs540
                     {
                         Node *current = head;
                         std::vector<Node *> tmp = head->forward;
-			printf( "I wonder what this following for loop does\n");
+//			printf( "I wonder what this following for loop does\n");
                         for (int lev = current_level; lev >= 0; lev--)
                         {
-			    printf("this is lev: %d\n", lev);
+//			    printf("this is lev: %d\n", lev);
                             while (current->forward[lev] != tail && static_cast<typename SkipList::NodeValues *>(current->forward[lev])->getValues().first < key)
                             {
                                 current = current->forward[lev];
@@ -212,14 +212,14 @@ namespace cs540
                                 {
                                     break;
                                 }
-			printf("do I get here?\n ----I think this is the find section---\n");
+//			printf("do I get here?\n ----I think this is the find section---\n");
 
                                 // A <=> B <=> C becomes A <=> C
                                 tmp[i]->forward[i] = current->forward[i]; // 	A -> C
                                 current->forward[i]->backward[i] = tmp[i]; //	A <- C
                             }
 
-			printf("right before 'delete'\n");
+//			printf("right before 'delete'\n");
 /*
 			delete current;
 type type type *pointer type
